@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject satyr;
 
-    public int numberTracker = 0;
+    [SerializeField]float x , minX, maxX;
 
     public void SpawnEnemy(int enemyNum)
     {
-      while(numberTracker++ < enemyNum)
-       Instantiate(satyr, transform.position, Quaternion.identity);        
+      x = Random.Range(minX, maxX);
+      Vector2 pos = new Vector2(x, transform.position.y);
+      while(enemyNum-- > 0)
+        Instantiate(satyr, pos, Quaternion.identity);
     }
 }

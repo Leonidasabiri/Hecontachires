@@ -10,6 +10,10 @@ public class Satyr : Enemy
     [SerializeField] AudioSource runSound;
     [SerializeField] AudioSource punchedHit;
 
+    [SerializeField] Transform bloodInstPoint;
+
+    [SerializeField] ParticleSystem blood;
+
     [SerializeField] float   timeBeforeGettingUp = 2;
     [SerializeField] float   impulseForce        = 5;
     [SerializeField] float   stepsOfAttack       = 1;
@@ -42,24 +46,24 @@ public class Satyr : Enemy
         }
         else
         {
-          transform.position = Vector2.MoveTowards(transform.position, new Vector2(target.position.x, 0), 40 * stepsOfAttack / 10 * Time.fixedDeltaTime);         
+          transform.position = Vector2.MoveTowards(transform.position, new Vector2(target.position.x, 0), 40 * stepsOfAttack / 10 * Time.fixedDeltaTime);                   
           this.isInFollowingState = false;
-          this.isInAttackingState = true;
-          StartCoroutine(returnToFollow());
+          if (!this.isTakingHit)
+           this.isInAttackingState = true;
         }
     }
 
     protected override void takingHit()
     {
+      Instantiate( blood, bloodInstPoint.position, Quaternion.identity);
       rb.AddForce(Vector2.right * impulseForce * Time.fixedDeltaTime * this.player.dir, ForceMode2D.Impulse);
-        punchedHit.time = 0.02f;
-        punchedHit.Play();
+      punchedHit.time = 0.02f;
+      punchedHit.Play();
     }
     
     void isHitting()
     {
         rb.AddForce(Vector2.right * headHitForce * Time.fixedDeltaTime * -this.player.dir, ForceMode2D.Impulse);
-        StartCoroutine(returnToFollow());
     }
 
     // Start is called before the first frame update
@@ -74,9 +78,8 @@ public class Satyr : Enemy
     void AnimationsSetting()
     {
         this.anim.SetBool("Running",this.isInFollowingState);
-        if (this.isTakingHit)
-         this.anim.SetTrigger("Hitted");
         this.anim.SetBool("Attack", this.isInAttackingState);
+        this.anim.SetBool("Hittedd", this.isTakingHit);
     }
 
     void SettingHitType()
@@ -90,6 +93,7 @@ public class Satyr : Enemy
         if (this.health <= 0)
         {
             Destroy(gameObject);
+            this.isTakingHit = true;
             FindObjectOfType<KillsCounter>().kills++;
             if(FindObjectOfType<KillsCounter>().kills%2 == 0)
               FindObjectOfType<GameManager>().timeOfSpawn++;
@@ -111,6 +115,7 @@ public class Satyr : Enemy
             this.health -= 0.2f;
             this.isTakingHit = true;
             this.isInFollowingState = false;
+            this.isInAttackingState = false;
             StartCoroutine(getUp());
         }
     } 
@@ -130,15 +135,11 @@ public class Satyr : Enemy
         }
     }
 
-    IEnumerator returnToFollow()
-    {
-        yield return new WaitForSeconds(timeBeforeGettingUp);
-        this.isInAttackingState = false;
-    }
-
     IEnumerator getUp()
     {
         yield return new WaitForSeconds(timeBeforeGettingUp);
-        this.isTakingHit = false;     
+        this.isTakingHit = false;
+        this.isInFollowingState = true;
+        this.isInAttackingState = true;
     }
 }

@@ -5,8 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Player : MonoBehaviour
 {
-    Enemy[] enem;
-
     [SerializeField] AudioSource punch;
 
     Vector2 initPos;
@@ -26,9 +24,9 @@ public class Player : MonoBehaviour
 
     [Header("Check if grounded")]
     [SerializeField] Transform checkGround;
+
     [SerializeField] Transform checkEnemy;
 
-    [UnityEngine.Serialization.FormerlySerializedAs("Speed")]
     public float speed          = 10;
     public float gravityScale   = 2;
 
@@ -70,9 +68,9 @@ public class Player : MonoBehaviour
 
     void Inputs()
     {
-        jumping    = Input.GetKeyDown(KeyCode.Space)    &&        (!attacking)                   ? true : false;
-        attacking  = (Input.GetKeyDown(KeyCode.Mouse0)  && timeBetweenHits <= 0)||Stillattacking ? true : false;
-        run        = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)         ? true : false;
+        jumping    = Input.GetKeyDown(KeyCode.Space)    &&        (!attacking)                  ? true : false;
+        attacking  = (Input.GetKeyDown(KeyCode.Mouse0)  && timeBetweenHits <= 0)||Stillattacking? true : false;
+        run        = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)        ? true : false;
     }    
 
     void flipPlayer()
@@ -108,12 +106,10 @@ public class Player : MonoBehaviour
          punch.time = 0.1f;
          punch.Play();
          Stillattacking = true;
-         transform.position = Vector3.Lerp(transform.position, initPos + new Vector2(1.2f * dir,0), attackForce);
-         timeBetweenHits = tmp;
-         initPos = transform.position;
+        // transform.position = Vector3.Lerp(transform.position, initPos + new Vector2(1.2f * dir,0), attackForce);
+         //timeBetweenHits = tmp;
+         //initPos = transform.position;
         }
-        if (run)
-          initPos = transform.position;
         timeBetweenHits = timeBetweenHits > 0 ? timeBetweenHits -= Time.deltaTime/10 : 0;
     }
 

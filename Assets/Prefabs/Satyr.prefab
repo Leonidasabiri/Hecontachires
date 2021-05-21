@@ -713,7 +713,9 @@ MonoBehaviour:
   eye: {fileID: 691798416204737044}
   runSound: {fileID: -3625893485809225023}
   punchedHit: {fileID: -3625893485809225023}
-  timeBeforeGettingUp: 5
+  bloodInstPoint: {fileID: 691798417790633452}
+  blood: {fileID: 2472280031105000371, guid: 689f83621453b114c8c89c68dece358a, type: 3}
+  timeBeforeGettingUp: 2
   impulseForce: 50
   stepsOfAttack: 0.2
   headHitForce: 10
