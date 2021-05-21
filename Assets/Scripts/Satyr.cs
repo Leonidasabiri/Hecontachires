@@ -91,6 +91,8 @@ public class Satyr : Enemy
         {
             Destroy(gameObject);
             FindObjectOfType<KillsCounter>().kills++;
+            if(FindObjectOfType<KillsCounter>().kills%2 == 0)
+              FindObjectOfType<GameManager>().timeOfSpawn++;
         }
         this.dir = this.isFacingRight ? 1 : -1;
         SettingHitType();
@@ -106,7 +108,7 @@ public class Satyr : Enemy
         if (this.checkIfContactingPlayerWhileAttacking() && player.attacking)
         {
             takingHit();
-            this.health -= 0.03f;
+            this.health -= 0.2f;
             this.isTakingHit = true;
             this.isInFollowingState = false;
             StartCoroutine(getUp());
